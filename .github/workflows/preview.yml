@@ -85,7 +85,7 @@ jobs:
         run: npm ls
 
       - name: format
-        run: npm run format
+        run: "npm run biome:format"
 
       - name: Build HonoX SSG
         run: npm run build
