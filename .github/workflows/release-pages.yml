@@ -7,7 +7,7 @@ on:
     types: [closed]
     branches:
       - main
-    workflow_dispatch:
+  workflow_dispatch:
 
 
 jobs:
@@ -19,6 +19,13 @@ jobs:
     steps:
       - name: Setup environment
         uses: actions/setup-node@v4
+
+      - name: Setup Cloudflare Temporaly Token
+        uses: atolycs/cf-create-token@main
+        id: cf-create-token
+        with:
+          token: ${{ secrets.CF_TOKEN }}
+          account_id: ${{ secrets.CF_ACCOUNT_ID}}
 
       - name: Create Github Apps Token
         uses: atolycs/create-app-auth@v1
@@ -55,7 +62,7 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         id: cloudflare_pages_deploy
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
+          apiToken: ${{ steps.cf-create-token.outputs.cf-token }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           command: pages deploy ./dist
 
