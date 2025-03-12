@@ -24,4 +24,4 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.gh_token.outputs.token }}
         run: |
-          gh issue create --title "Hello world!"
+          gh issue create --title "Hello world!" --body "Hello world!"
