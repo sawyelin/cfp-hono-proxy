@@ -66,6 +66,13 @@ jobs:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PEM }}
 
+      - name: Setup Cloudflare Temporaly Token
+        uses: atolycs/cf-create-token@main
+        id: cf-create-token
+        with:
+          token: ${{ secrets.CF_TOKEN }}
+          account_id: ${{ secrets.CF_ACCOUNT_ID}}
+
       - name: checkout
         uses: actions/checkout@v4
 
@@ -85,7 +92,7 @@ jobs:
         run: npm ls
 
       - name: format
-        run: npm run format
+        run: "npm run biome:format"
 
       - name: Build HonoX SSG
         run: npm run build
@@ -94,9 +101,9 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         id: cloudflare_pages_deploy
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
+          apiToken: ${{ steps.cf-create-token.outputs.cf-token }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          command: pages deploy ./dist --project-name=${{ vars.project_name }}
+          command: pages deploy ./dist
 
       - name: Commit status
         uses: actions/github-script@v7
