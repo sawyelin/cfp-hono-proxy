@@ -26,4 +26,10 @@ app.get("/setup.sh", (c) => {
   return c.render(<h1>Ubuntu Hello world</h1>);
 });
 
+app.get("/nixos/init", (c) => {
+  return proxy(
+    "https://raw.githubusercontent.com/atolycs/setup-tools/refs/heads/main/nixos/deploy.sh",
+  );
+});
+
 export default app;
